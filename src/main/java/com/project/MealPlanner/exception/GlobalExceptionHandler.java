@@ -12,13 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MealNotFoundException.class)
     public ResponseEntity<Object> handleMealNotException(MealNotFoundException e) {
-        log.error("Exception occured: ", e.getMessage());
+        log.error("Exception occured: ", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAll(Exception e) {
-        log.error("Exception occured: ", e.getMessage());
+        log.error("Exception occured: ", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
