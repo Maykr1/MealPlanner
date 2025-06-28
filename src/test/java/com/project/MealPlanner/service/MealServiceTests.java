@@ -93,7 +93,6 @@ public class MealServiceTests {
 
         assertEquals(e.getMessage(), "Meal not found");
         verify(mealRepository).findById(anyInt());
-        
     }
 
     @Test
@@ -111,7 +110,7 @@ public class MealServiceTests {
         when(mealRepository.findById(anyInt())).thenReturn(Optional.of(mockedMeal1));
         when(mealRepository.save(any(Meal.class))).thenReturn(mockedMeal2);
 
-        response = mealServiceImpl.updateMeal(1, mockedMeal2);
+        response = mealServiceImpl.updateMeal(mockedMeal1.getId(), mockedMeal2);
 
         assertEquals(response.getName(), mockedMeal2.getName());
         verify(mealRepository).findById(anyInt());
