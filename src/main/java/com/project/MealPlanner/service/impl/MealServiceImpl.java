@@ -65,7 +65,7 @@ public class MealServiceImpl implements MealService {
         Meal mealById = this.mealRepository.findById(id)
             .orElseThrow(() -> new MealNotFoundException("Meal not found"));
         
-        this.mealRepository.delete(mealById);
+        this.mealRepository.deleteById(mealById.getId());
     }
 
     @Override
