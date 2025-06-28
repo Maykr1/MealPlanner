@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: MealPlanner
+    
+    datasource:
+        url: jdbc:postgresql://pgdb:5432/mealplanner
+        username: postgres
+        password: 1234
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
