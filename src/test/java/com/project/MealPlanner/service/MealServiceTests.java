@@ -20,6 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.project.MealPlanner.dto.MealRequest;
+import com.project.MealPlanner.dto.MealResponse;
 import com.project.MealPlanner.entity.Meal;
 import com.project.MealPlanner.exception.MealNotFoundException;
 import com.project.MealPlanner.repository.MealRepository;
@@ -33,42 +35,60 @@ public class MealServiceTests {
     @InjectMocks
     private MealServiceImpl mealServiceImpl;
 
+    List<MealResponse> allMealResponses = new ArrayList<>();
     List<Meal> allMeals = new ArrayList<>();
-    Meal response;
+    MealResponse response;
+    
+    MealRequest mockedMealRequest1;
+    MealRequest mockedMealRequest2;
     Meal mockedMeal1;
     Meal mockedMeal2;
+    MealResponse mockedMealResponse1;
+    MealResponse mockedMealResponse2;
 
     @BeforeEach
     public void setup() {
-        mockedMeal1 = Meal.builder()
-            .id(1)
+        mockedMealRequest1 = MealRequest.builder()
             .name("Banana")
-            .type("Lunch")
-            .description("It's a banana obviously")
-            .ingredients("Banana")
             .build();
 
+        mockedMealRequest2 = MealRequest.builder()
+            .name("Apple")
+            .build();
+
+        mockedMeal1 = Meal.builder()
+            .id(1)
+            .name(mockedMealRequest1.getName())
+            .build();
         mockedMeal2 = Meal.builder()
             .id(2)
-            .name("Apple")
-            .type("Lunch")
-            .description("It's a apple obviously")
-            .ingredients("Apple")
+            .name(mockedMealRequest2.getName())
+            .build();
+        
+        mockedMealResponse1 = MealResponse.builder()
+            .id(1)
+            .name(mockedMeal1.getName())
+            .build();
+        mockedMealResponse2 = MealResponse.builder()
+            .id(2)
+            .name(mockedMeal2.getName())
             .build();
 
         allMeals.add(mockedMeal1);
         allMeals.add(mockedMeal2);
+        allMealResponses.add(mockedMealResponse1);
+        allMealResponses.add(mockedMealResponse2);
     }
 
     @Test
     public void getAllMeals() {
         when(mealRepository.findAll()).thenReturn(allMeals);
 
-        List<Meal> response = mealServiceImpl.getAllMeals();
+        List<MealResponse> response = mealServiceImpl.getAllMeals();
 
-        assertEquals(allMeals, response);
-        assertEquals(mockedMeal1.getName(), response.get(0).getName());
-        assertEquals(mockedMeal2.getName(), response.get(1).getName());
+        assertEquals(response, allMealResponses);
+        assertEquals(response.get(0).getName(), allMealResponses.get(0).getName());
+        assertEquals(response.get(1).getName(), allMealResponses.get(1).getName());
         verify(mealRepository).findAll();
     }
 
@@ -78,7 +98,7 @@ public class MealServiceTests {
 
         response = mealServiceImpl.getMealById(1);
 
-        assertEquals(response, mockedMeal1);
+        assertEquals(response, mockedMealResponse1);
         verify(mealRepository).findById(1);
     }
 
@@ -99,9 +119,9 @@ public class MealServiceTests {
     public void createMeal() {
         when(mealRepository.save(any(Meal.class))).thenReturn(mockedMeal1);
 
-        response = mealServiceImpl.createMeal(mockedMeal1);
+        response = mealServiceImpl.createMeal(mockedMealRequest1);
 
-        assertEquals(response, mockedMeal1);
+        assertEquals(response, mockedMealResponse1);
         verify(mealRepository).save(any(Meal.class));
     }
 
@@ -110,7 +130,7 @@ public class MealServiceTests {
         when(mealRepository.findById(anyInt())).thenReturn(Optional.of(mockedMeal1));
         when(mealRepository.save(any(Meal.class))).thenReturn(mockedMeal2);
 
-        response = mealServiceImpl.updateMeal(mockedMeal1.getId(), mockedMeal2);
+        response = mealServiceImpl.updateMeal(1, mockedMealRequest2);
 
         assertEquals(response.getName(), mockedMeal2.getName());
         verify(mealRepository).findById(anyInt());

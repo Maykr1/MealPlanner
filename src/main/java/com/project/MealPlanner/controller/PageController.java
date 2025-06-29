@@ -25,7 +25,7 @@ public class PageController {
         List<String> mealTimes = List.of("Breakfast", "Lunch", "Dinner", "Snack");
 
         Map<String, Meal> mealMap = new HashMap<>();
-        mealMap.put("Monday_Breakfast", new Meal(1, "Banana", "Breakfast", "Delicious", "no"));
+        mealMap.put("Monday_Breakfast", new Meal(1, "Banana"));
 
         model.addAttribute("mealList", mealMap);
         model.addAttribute("daysList", days);

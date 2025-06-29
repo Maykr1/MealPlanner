@@ -18,7 +18,4 @@ public class Meal {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private String type; // Breakfast, lunch, or dinner
-    private String description;
-    private String ingredients;
 }

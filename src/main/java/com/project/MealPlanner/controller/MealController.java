@@ -2,6 +2,8 @@ package com.project.MealPlanner.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.MealPlanner.dto.MealRequest;
+import com.project.MealPlanner.dto.MealResponse;
 import com.project.MealPlanner.entity.Meal;
 import com.project.MealPlanner.service.MealService;
 
@@ -28,26 +30,26 @@ public class MealController {
     private final MealService mealService;
 
     @GetMapping("")
-    public ResponseEntity<List<Meal>> getAllMeals() {
-        List<Meal> allMeals = this.mealService.getAllMeals();
+    public ResponseEntity<List<MealResponse>> getAllMeals() {
+        List<MealResponse> allMeals = this.mealService.getAllMeals();
         return new ResponseEntity<>(allMeals, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Meal> getMealById(@PathVariable("id") Integer id) {
-        Meal mealById = this.mealService.getMealById(id);
+    public ResponseEntity<MealResponse> getMealById(@PathVariable("id") Integer id) {
+        MealResponse mealById = this.mealService.getMealById(id);
         return new ResponseEntity<>(mealById, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<Meal> createMeal(@RequestBody Meal meal) {
-        Meal createdMeal = this.mealService.createMeal(meal);
+    public ResponseEntity<MealResponse> createMeal(@RequestBody MealRequest mealRequest) {
+        MealResponse createdMeal = this.mealService.createMeal(mealRequest);
         return new ResponseEntity<>(createdMeal, HttpStatus.CREATED);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Meal> updateMeal(@PathVariable("id") Integer id, @RequestBody Meal meal) {
-        Meal updatedMeal = this.mealService.updateMeal(id, meal);
+    public ResponseEntity<MealResponse> updateMeal(@PathVariable("id") Integer id, @RequestBody MealRequest mealRequest) {
+        MealResponse updatedMeal = this.mealService.updateMeal(id, mealRequest);
         return new ResponseEntity<>(updatedMeal, HttpStatus.OK);
     }
 

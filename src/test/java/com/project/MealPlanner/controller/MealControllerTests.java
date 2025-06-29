@@ -24,7 +24,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.MealPlanner.entity.Meal;
+import com.project.MealPlanner.dto.MealRequest;
+import com.project.MealPlanner.dto.MealResponse;
 import com.project.MealPlanner.exception.MealNotFoundException;
 import com.project.MealPlanner.service.MealService;
 
@@ -40,31 +41,33 @@ public class MealControllerTests {
     @MockitoBean
     private MealService mealService;
 
-    List<Meal> allMeals = new ArrayList<>();
-    ResponseEntity<Meal> response;
-    Meal mockedMeal1;
-    Meal mockedMeal2;
+    List<MealResponse> allMeals = new ArrayList<>();
+    ResponseEntity<MealResponse> response;
+    
+    MealRequest mockedMealRequest1;
+    MealRequest mockedMealRequest2;
+    MealResponse mockedMealResponse1;
+    MealResponse mockedMealResponse2;
 
     @BeforeEach
     public void setup() {
-        mockedMeal1 = Meal.builder()
-            .id(1)
+        mockedMealRequest1 = MealRequest.builder()
             .name("Banana")
-            .type("Lunch")
-            .description("It's a banana obviously")
-            .ingredients("Banana")
             .build();
 
-        mockedMeal2 = Meal.builder()
-            .id(2)
+        mockedMealRequest2 = MealRequest.builder()
             .name("Apple")
-            .type("Lunch")
-            .description("It's a apple obviously")
-            .ingredients("Apple")
             .build();
-
-        allMeals.add(mockedMeal1);
-        allMeals.add(mockedMeal2);
+        
+        mockedMealResponse1 = MealResponse.builder()
+            .id(1)
+            .name(mockedMealRequest1.getName())
+            .build();
+        mockedMealResponse1 = MealResponse.builder()
+            .id(2)
+            .name(mockedMealRequest2.getName())
+            .build();
+        
     }
 
     @Test
@@ -78,11 +81,11 @@ public class MealControllerTests {
 
     @Test
     public void getMealById() throws Exception {
-        when(mealService.getMealById(anyInt())).thenReturn(mockedMeal1);
+        when(mealService.getMealById(anyInt())).thenReturn(mockedMealResponse1);
 
         mockMvc.perform(get("/mealplanner/1"))
             .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(mockedMeal1)));
+            .andExpect(content().json(objectMapper.writeValueAsString(mockedMealResponse1)));
     }
     
     @Test
@@ -96,34 +99,34 @@ public class MealControllerTests {
 
     @Test
     public void createMeal() throws Exception{
-        when(mealService.createMeal(any(Meal.class))).thenReturn(mockedMeal1);
+        when(mealService.createMeal(any(MealRequest.class))).thenReturn(mockedMealResponse1);
 
         mockMvc.perform(post("/mealplanner")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mockedMeal1)))
+                .content(objectMapper.writeValueAsString(mockedMealRequest1)))
             .andExpect(status().isCreated())
-            .andExpect(content().json(objectMapper.writeValueAsString(mockedMeal1)));
+            .andExpect(content().json(objectMapper.writeValueAsString(mockedMealResponse1)));
     }
 
     @Test
     public void updateMeal() throws Exception {
-        when(mealService.updateMeal(anyInt(), any(Meal.class))).thenReturn(mockedMeal2);
+        when(mealService.updateMeal(anyInt(), any(MealRequest.class))).thenReturn(mockedMealResponse1);
 
         mockMvc.perform(put("/mealplanner/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mockedMeal2)))
+                .content(objectMapper.writeValueAsString(mockedMealRequest2)))
             .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(mockedMeal2)));
+            .andExpect(content().json(objectMapper.writeValueAsString(mockedMealRequest2)));
     }
 
     @Test
     public void updateMealNotFound() throws Exception {
-        when(mealService.updateMeal(anyInt(), any(Meal.class)))
+        when(mealService.updateMeal(anyInt(), any(MealRequest.class)))
             .thenThrow(new MealNotFoundException("Meal not found"));
         
         mockMvc.perform(put("/mealplanner/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(mockedMeal2)))
+            .content(objectMapper.writeValueAsString(mockedMealRequest2)))
         .andExpect(status().isNotFound());
     }
 
