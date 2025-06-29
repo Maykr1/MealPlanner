@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.MealPlanner.dto.MealRequest;
 import com.project.MealPlanner.dto.MealResponse;
-import com.project.MealPlanner.entity.Meal;
 import com.project.MealPlanner.service.MealService;
 
 import lombok.RequiredArgsConstructor;
